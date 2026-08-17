@@ -7,7 +7,7 @@ spring:
 
 eureka:
   client:
-    register-with-eureka: false   # Le serveur ne s'enregistre pas lui-même
-    fetch-registry: false         # Il ne récupère pas le registre
+    register-with-eureka: false   # The server does not register itself/Le serveur ne s'enregistre pas lui-même
+    fetch-registry: false         # It does not retrieve the register/Il ne récupère pas le registre
   server:
-    enable-self-preservation: false  # Evite les warnings
+    enable-self-preservation: false  # Avoid warnings/Evite les warnings

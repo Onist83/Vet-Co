@@ -1,40 +1,63 @@
-package com.onist.gateway.Configuration;
+package com.onist.gateway.configuration;
 
+import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions;
+import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
+import org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.util.RouteMatcher.Route;
+import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.ServerResponse;
+
+import static org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions.uri;
+
+// Gateway route configuration
+// Each method defines a route that redirects
 @Configuration
 public class GatewayRoutesConfiguration {
 
+    // Route to the Animal Service
     @Bean
     public RouterFunction<ServerResponse> animalRoute() {
-        return GatewayRouterFunction.route("animal")
-        .route(GatewayRequestPredicates.path("api/v1/animal/**"), HandlerFunction.http("http://animal:8010"))
+    return GatewayRouterFunctions.route("animal")
+        .route(GatewayRequestPredicates.path("api/v1/animal/**"), HandlerFunctions.http())
+        .before(uri("http://animal:8010"))
         .build();
-    }
-
+}
+    // Route to the User Service
     @Bean 
     public RouterFunction<ServerResponse> userRoute() {
-        return GatewayRouterFunction.route("user")
-        .route(GatewayRequestPredicates.path("api/v1/user/**"), HandlerFunction.http("http://user:8020"))
+        return GatewayRouterFunctions.route("user")
+        .route(GatewayRequestPredicates.path("api/v1/user/**"), HandlerFunctions.http())
+        .before(uri("http://user:8020"))
         .build();
     }
 
+    // Route to the Authentication Service
     @Bean
     public RouterFunction<ServerResponse> authRoute() {
-        return GatewayRouterFunction.route("auth")
-        .route(GatewayRequestPredicates.path("api/v1/auth/**"), HandlerFunction.http("http://auth:8030"))
+        return GatewayRouterFunctions.route("auth")
+        .route(GatewayRequestPredicates.path("api/v1/auth/**"), HandlerFunctions.http())
+        .before(uri("http://auth:8030"))
         .build();
     }
 
+    // Route to the Notification Service
     @Bean 
     public RouterFunction<ServerResponse> commentaryRoute() {
-        return GatewayRouterFunction.route("commentary")
-        .route(GatewayRequestPredicates.path("api/v1/commentary/**"), HandlerFunction.http("http://commentary:8060"))
+        return GatewayRouterFunctions.route("commentary")
+        .route(GatewayRequestPredicates.path("api/v1/commentary/**"), HandlerFunctions.http())
+        .before(uri("http://commentary:8060"))
         .build();
     }
 
+
+    // Route to the Appointment Service
     @Bean
     public RouterFunction<ServerResponse> appointmentRoute() {
-        return GatewayRouterFunction.route("appointment")
-        .route(GatewayRequestPredicates.path("api/v1/appointment/**"), HandlerFunction.http("http://appointment:8070"))
+        return GatewayRouterFunctions.route("appointment")
+        .route(GatewayRequestPredicates.path("api/v1/appointment/**"), HandlerFunctions.http())
+        .before(uri("http://appointment:8070"))
         .build();
     }
 
