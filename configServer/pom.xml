@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.onist</groupId>
-	<artifactId>config-server</artifactId>
+	<artifactId>configServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>configServer</name>
+    <description>Config Server</description>
 	<url/>
 	<licenses>
 		<license/>
