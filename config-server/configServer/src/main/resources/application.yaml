@@ -1,0 +1,20 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: configServer
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Onist83/Vet-Co-Configuration.git
+          default-label: master
+          username: ${GITHUB_USERNAME}
+          password: ${GITHUB_TOKEN}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true          

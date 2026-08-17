@@ -1,4 +1,4 @@
-package com.onist.gateway.Configuration;
+package com.onist.gateway.configuration;
 
 import java.util.List;
 
