@@ -15,4 +15,9 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/  
+      defaultZone: http://localhost:8761/eureka/ 
+
+jwt:
+  secret: "tcq3VLMOpu24z91hafo+o2t5MJKUey5WFTE0j7mTbSW3Iz0Vivcga9avMrzNy0XlmECgp7/4hm5E85HgM+oZOQ=="
+  expiration: 8640000 # 1 day in milliseconds
+  refresh-expiration: 604800000 # 7 days in milliseconds
