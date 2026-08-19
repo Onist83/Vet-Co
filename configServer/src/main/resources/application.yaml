@@ -12,9 +12,11 @@ spring:
           username: ${GITHUB_USERNAME}
           password: ${GITHUB_TOKEN}
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
+
+#####EUREKA#####
+# eureka:
+#   client:
+#     service-url:
+#       defaultZone: http://localhost:8761/eureka/
+#   instance:
+#     prefer-ip-address: true

@@ -12,10 +12,22 @@ spring:
     hibernate:
       ddl-auto: update
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/ 
+#####EUREKA######
+# eureka:
+#   client:
+#     service-url:
+#       defaultZone: http://localhost:8761/eureka/ 
+
+#####CONSUL######
+  cloud: 
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 15s
+        instance-id: ${spring.application.name}:${server.port}
 
 jwt:
   secret: "tcq3VLMOpu24z91hafo+o2t5MJKUey5WFTE0j7mTbSW3Iz0Vivcga9avMrzNy0XlmECgp7/4hm5E85HgM+oZOQ=="

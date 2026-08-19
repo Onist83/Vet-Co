@@ -1,10 +1,35 @@
+#######GATEWAY CONFIGURATION#####
+
+# spring:
+#   config:
+#     import: "optional:configserver:"
+
+#   application:
+#     name: gateway
+    
+#   cloud:
+#     config:
+#       uri: http://localhost:8888
+
+
+######CONSUL CONFIGURATION######
+
 spring:
   config:
-    import: "optional:configserver:"
+    import: "optional:configserver"
 
   application:
     name: gateway
-    
+
   cloud:
     config:
       uri: http://localhost:8888
+    consul:
+      host: localhost
+      port: 8500 
+      discovery:
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 15s
+        instance-id: ${spring.application.nam}:${server.port:8080}      
+
