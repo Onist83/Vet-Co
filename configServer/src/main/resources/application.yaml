@@ -8,7 +8,7 @@ spring:
       server:
         git:
           uri: https://github.com/Onist83/Vet-Co-Configuration.git
-          default-label: master
+          default-label: main
           username: ${GITHUB_USERNAME}
           password: ${GITHUB_TOKEN}
 

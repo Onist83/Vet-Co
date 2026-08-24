@@ -42,6 +42,12 @@ services:
     environment:
       GITHUB_USERNAME: ${GITHUB_USERNAME}
       GITHUB_TOKEN: ${GITHUB_TOKEN}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8888/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   user:
     build: ./user
@@ -51,10 +57,11 @@ services:
       mysql:
         condition: service_healthy
       configserver:
-         condition: service_started
+         condition: service_healthy
     ports:
       - "8020:8020"
     environment:
+      SERVER_PORT: 8020
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/user_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -75,7 +82,7 @@ services:
   #   environment:
   #     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/animal_db
   #     SPRING_DATASOURCE_USERNAME: root
-  #     SPRING_DATASOURCE_PASSWORD: Azerty13100+
+  #     SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
   #     SPRING_CLOUD_CONSUL_HOST: consul
   #     SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
 
@@ -122,7 +129,7 @@ services:
         # commentary:
         #   condition: service_started
         configserver:
-          condition: service_started
+          condition: service_healthy
       ports:
         - "8822:8822"
       environment:

@@ -6,6 +6,6 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/*.jar Vet&CoApp.jar
+COPY --from=build /app/target/*.jar VetCoApp.jar
 EXPOSE 8888
-ENTRYPOINT ["java", "-jar", "Vet&CoApp.jar"]
+ENTRYPOINT ["java", "-jar", "VetCoApp.jar"]
