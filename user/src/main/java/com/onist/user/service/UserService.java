@@ -50,7 +50,7 @@ public class UserService {
     }
     
     // Retrieves a user by their unique ID. If the user is not found, it throws a UserNotFoundException.
-    public UserModel updateUser(Integer id, UserModel updatedUser) {
+    public UserModel updateUser(Long id, UserModel updatedUser) {
        UserModel existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
@@ -63,7 +63,7 @@ public class UserService {
     }
 
     // Deletes a user by their unique ID. If the user is not found, it throws a UserNotFoundException.
-    public void deleteUser(Integer id) {
+    public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException("User not found with id: " + id);
         }

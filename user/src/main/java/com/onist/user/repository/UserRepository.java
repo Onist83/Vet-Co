@@ -6,11 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.onist.user.model.UserModel;
 
-public interface UserRepository extends JpaRepository<UserModel,Integer> {
+public interface UserRepository extends JpaRepository<UserModel,Long> {
 
     // Finds a user by their email address, returning an Optional containing the UserModel if found, or an empty Optional if not found.
     Optional<UserModel> findByEmail(String email);
     boolean existsByEmail(String email);
-
-
 }

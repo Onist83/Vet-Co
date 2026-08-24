@@ -1,5 +1,7 @@
 package com.onist.user.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,11 +31,14 @@ public class UserModel {
     // It is annotated with JPA annotations to map it to a database table named "users".
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name="first_name", nullable = false)
+    @NotBlank(message="Le prénom est obligatoire")
     private String firstname;
+    
     @Column(name="last_name", nullable = false)
+    @NotBlank(message="Le nom est obligatoire")
     private String lastname;
 
     @Column(name="role", nullable = false)
@@ -39,12 +46,15 @@ public class UserModel {
     private Role role;
 
     @Column(name="email", nullable = false, unique = true)
+    @NotBlank(message="L'email est obligatoire")
+    @Email(message="Format d'email invalide")
     private String email;
 
     @Column(name="password", nullable = false)
+    @NotBlank(message="Le password est obligatoire")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Builder.Default
-    private boolean enabled = true;
-    
+    private boolean enabled = true;   
 }

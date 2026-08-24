@@ -1,0 +1,144 @@
+services:
+  consul:
+    image: hashicorp/consul:1.19
+    ports:
+      - "8500:8500"
+    command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql   
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # mongo: 
+  #   image: mongo:7.0
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo_data:/data/db
+      
+  configserver:
+    build: ./configserver
+    depends_on:
+        consul:
+          condition: service_healthy
+    ports:
+      - "8888:8888"
+    environment:
+      GITHUB_USERNAME: ${GITHUB_USERNAME}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+
+  user:
+    build: ./user
+    depends_on:
+      consul:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      configserver:
+         condition: service_started
+    ports:
+      - "8020:8020"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/user_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+
+  # animal:
+  #   build: ./animal
+  #   depends_on:
+  #     consul:
+  #       condition: service_healthy
+  #     mysql:
+  #       condition: service_healthy
+  #     configserver:
+  #        condition: service_started
+  #   ports:
+  #     - "8010:8010"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/animal_db
+  #     SPRING_DATASOURCE_USERNAME: root
+  #     SPRING_DATASOURCE_PASSWORD: Azerty13100+
+  #     SPRING_CLOUD_CONSUL_HOST: consul
+  #     SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+
+  # commentary:
+  #   build: ./commentary
+  #   depends_on:
+  #     consul:
+  #       condition: service_healthy
+  #     mongo:
+  #       condition: service_started
+  #     configserver:
+  #       condition: service_started
+  #   ports:
+  #     - "8030:8030"
+  #   environment:
+  #     SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/commentary_db
+  #     SPRING_CLOUD_CONSUL_HOST: consul
+  #     SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+
+  # appointment:
+  #   build: ./appointment
+  #   depends_on:
+  #     consul:
+  #       condition: service_healthy
+  #     patient:
+  #       condition: service_started
+  #     notes-service:
+  #       condition: service_started
+  #   ports:
+  #     - "8070:8070"
+  #   environment:
+  #     SPRING_CLOUD_CONSUL_HOST: consul
+  #     SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+
+  gateway:
+      build: ./gateway
+      depends_on:
+        consul:
+          condition: service_healthy
+        user:
+          condition: service_started
+        # animal:
+        #   condition: service_started
+        # commentary:
+        #   condition: service_started
+        configserver:
+          condition: service_started
+      ports:
+        - "8822:8822"
+      environment:
+        SPRING_CLOUD_CONSUL_HOST: consul
+        SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+
+  # frontend:
+  #     build: ./frontend
+  #     depends_on:
+  #       - gateway
+  #     ports:
+  #       - "4200:80"
+
+
+
+volumes:
+  mysql_data:
+  mongo_data:         
+

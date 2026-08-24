@@ -13,10 +13,12 @@
 
 
 ######CONSUL CONFIGURATION######
+server:
+  port: 8822
 
 spring:
   config:
-    import: "optional:configserver"
+    import: "optional:configserver:"
 
   application:
     name: gateway
@@ -31,5 +33,14 @@ spring:
         prefer-ip-address: true
         health-check-path: /actuator/health
         health-check-interval: 15s
-        instance-id: ${spring.application.nam}:${server.port:8080}      
+        instance-id: ${spring.application.name}:${server.port} 
+
+  gateway:
+    server:
+      webmvc:
+        routes:
+          - id: user-service
+            uri: lb://user
+            predicates:
+              - Path=/api/v1/auth/**,/api/v/user/**           
 

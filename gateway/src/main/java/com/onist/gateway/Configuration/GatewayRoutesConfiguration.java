@@ -37,7 +37,7 @@ public class GatewayRoutesConfiguration {
     public RouterFunction<ServerResponse> authRoute() {
         return GatewayRouterFunctions.route("auth")
         .route(GatewayRequestPredicates.path("api/v1/auth/**"), HandlerFunctions.http())
-        .before(uri("http://auth:8030"))
+        .before(uri("http://user:8020"))
         .build();
     }
 
