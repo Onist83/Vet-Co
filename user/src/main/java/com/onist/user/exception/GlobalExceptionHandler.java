@@ -8,27 +8,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-// Intercepte les exceptions métier levées n'importe où dans l'application
-// et les transforme en réponses HTTP propres (au lieu d'un 500 avec stack trace exposée)
+// Catch application exceptions and transforms them into HTTP responses
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Handles the case where a user is not found (404)
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFound(UserNotFoundException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    // Handles the case where the email is already in use (409 Conflict)
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<Object> handleEmailExists(EmailAlreadyExistsException ex) {
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
+    // Handles the case of an invalid or expired refresh token (401 Unauthorized)
     @ExceptionHandler(InvalidRefreshTokenException.class)
     public ResponseEntity<Object> handleInvalidRefreshToken(InvalidRefreshTokenException ex) {
         return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
-    // Méthode utilitaire pour construire une réponse JSON uniforme
+    // Method to construct a uniform JSON response
     private ResponseEntity<Object> buildResponse(HttpStatus status, String message) {
         Map<String, Object> body = Map.of(
             "timestamp", Instant.now().toString(),

@@ -9,14 +9,17 @@ import com.onist.user.model.Role;
 import com.onist.user.model.UserModel;
 import com.onist.user.repository.UserRepository;
 
+// User configuration + default account initialization
 @Configuration
 public class UserConfiguration {
 
+    // Creates Admin, Manager, and User accounts at startup if they do not exist
     @Bean
     public CommandLineRunner createAdminUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             if (userRepository.findByEmail("admin@vetetco.com").isEmpty()) {
                
+            // Create Admin
                 UserModel admin = new UserModel();
                 admin.setEmail("admin@vetetco.com");
                 admin.setPassword(passwordEncoder.encode("admin123"));
@@ -28,6 +31,7 @@ public class UserConfiguration {
                 userRepository.save(admin);
             }
 
+            // Create Manager
             if (userRepository.findByEmail("manager@vetetco.com").isEmpty()) {
                 UserModel manager = new UserModel();
                 manager.setEmail("manager@vetetco.com");
@@ -40,6 +44,7 @@ public class UserConfiguration {
                 userRepository.save(manager);
             }
 
+            // Create User
             if (userRepository.findByEmail("user@vetetco.com").isEmpty()) {
                 UserModel user = new UserModel();
                 user.setEmail("user@vetetco.com");
@@ -53,5 +58,4 @@ public class UserConfiguration {
             }
         };
     }
-
 }

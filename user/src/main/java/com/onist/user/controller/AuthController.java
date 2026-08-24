@@ -20,11 +20,13 @@ public class AuthController {
 
     private final AuthService authService;
     
+    // Authenticates a user and returns an access token and a refresh token
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));   
     }
 
+    // Renews the access token using a valid refresh token.
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));

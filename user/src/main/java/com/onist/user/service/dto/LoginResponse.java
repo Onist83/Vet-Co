@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoginResponse {
-    // The LoginResponse class represents the data transfer object (DTO) for user login responses.
+    // The LoginResponse class represents the data transfer object (DTO) for user login responses
 
     private String token;
     private String refreshToken;

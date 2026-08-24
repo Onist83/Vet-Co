@@ -27,7 +27,7 @@ public class UserController {
 
     private final UserService userService;
 
-    //
+    // Create a new User (Admin, Manager, or User)
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel user) {
@@ -41,17 +41,20 @@ public class UserController {
          return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    //  Retrieves the list of all Users
     @GetMapping("/all")
     public ResponseEntity<List<UserModel>> findAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    // Updates the information of an existing User
     @PutMapping("/update/{id}")
     public ResponseEntity<UserModel> updateUser (@PathVariable Long id, @RequestBody UserModel user) {
         UserModel updated = userService.updateUser(id, user);
         return ResponseEntity.ok(updated);
     }
 
+    // Deletes a User by their ID
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {

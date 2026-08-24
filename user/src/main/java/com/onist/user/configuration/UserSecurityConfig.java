@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class UserSecurityConfig {
     private final JwtUserAuthenticationFilter jwtUserAuthenticationFilter;
 
-    // Configures the security filter chain for the application, defining how requests are secured and which endpoints require authentication or specific roles.
+    // Configures the security filter chain for the application, defining how requests are secured and which endpoints require authentication or specific roles
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -43,13 +43,13 @@ public class UserSecurityConfig {
         return http.build();
     }
 
-    // Defines a bean for password encoding using BCrypt, which is used to securely hash user passwords before storing them in the database.
+    // Defines a bean for password encoding using BCrypt, which is used to securely hash user passwords before storing them in the database
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Defines a bean for the AuthenticationManager, which is responsible for processing authentication requests and validating user credentials.
+    // Defines a bean for the AuthenticationManager, which is responsible for processing authentication requests and validating user credentials
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();

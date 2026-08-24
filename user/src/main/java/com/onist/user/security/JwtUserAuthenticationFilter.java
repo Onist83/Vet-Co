@@ -25,7 +25,7 @@ public class JwtUserAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    // Filters incoming HTTP requests to authenticate users based on the JWT token provided in the Authorization header.
+    // Filters incoming HTTP requests to authenticate users based on the JWT token provided in the Authorization header
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 

@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 public class LoginRequest {
-    // The LoginRequest class represents the data transfer object (DTO) for user login requests.
-    // It contains the email and password fields, which are validated using Jakarta Bean Validation annotations.
+    // The LoginRequest class represents the data transfer object (DTO) for user login requests
+    // It contains the email and password fields, which are validated using Jakarta Bean Validation annotations
 
     @NotBlank(message = "L'email est obligatoire")
     @Email(message = "Format d'email invalide")
