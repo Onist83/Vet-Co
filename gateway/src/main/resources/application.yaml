@@ -24,8 +24,6 @@ spring:
     name: gateway
 
   cloud:
-    config:
-      uri: http://localhost:8888
     consul:
       host: consul
       port: 8500 
@@ -35,12 +33,12 @@ spring:
         health-check-interval: 15s
         instance-id: ${spring.application.name}:${server.port} 
 
-  gateway:
-    server:
-      webmvc:
-        routes:
-          - id: user-service
-            uri: lb://user
-            predicates:
-              - Path=/api/v1/auth/**,/api/v/user/**           
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: user-service
+              uri: lb://user
+              predicates:
+                - Path=/api/v1/auth/**,/api/v1/user/**           
 
