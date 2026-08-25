@@ -16,20 +16,20 @@ spring:
 #       defaultZone: http://localhost:8761/eureka/ 
 
 #####CONSUL######
-  cloud: 
-    consul:
-      host: consul
-      port: 8500
-      discovery:
-        prefer-ip-address: true
-        health-check-path: /actuator/health
-        health-check-interval: 15s
-        instance-id: ${spring.application.name}:${server.port}
+  # cloud: 
+  #   consul:
+  #     host: consul
+  #     port: 8500
+  #     discovery:
+  #       prefer-ip-address: true
+  #       health-check-path: /actuator/health
+  #       health-check-interval: 15s
+  #       instance-id: ${spring.application.name}:${server.port}
 
     config:
-    import: optional:configserver:http://localhost:8888      
+    import: optional:configserver:http://configserver:8888      
 
-jwt:
-  secret: "tcq3VLMOpu24z91hafo+o2t5MJKUey5WFTE0j7mTbSW3Iz0Vivcga9avMrzNy0XlmECgp7/4hm5E85HgM+oZOQ=="
-  expiration: 8640000 # 1 day in milliseconds
-  refresh-expiration: 604800000 # 7 days in milliseconds
+# jwt:
+#   secret: ${JWT_SECRET}
+#   expiration: 8640000 # 1 day in milliseconds
+#   refresh-expiration: 604800000 # 7 days in milliseconds
