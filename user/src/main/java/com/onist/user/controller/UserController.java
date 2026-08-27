@@ -49,15 +49,15 @@ public class UserController {
 
     // Updates the information of an existing User
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserModel> updateUser (@PathVariable Long id, @RequestBody UserModel user) {
+    public ResponseEntity<UserModel> updateUser (@PathVariable Long id, @Valid @RequestBody UserModel user) {
         UserModel updated = userService.updateUser(id, user);
         return ResponseEntity.ok(updated);
     }
 
-    // Deletes a User by their ID
+    // Deletes a User by their Id
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
     }
 }

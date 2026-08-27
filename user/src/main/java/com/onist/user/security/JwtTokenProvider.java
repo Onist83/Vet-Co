@@ -68,8 +68,8 @@ public class JwtTokenProvider {
         return true;
     } catch (JwtException e) {
         return false;
+        }
     }
-}
 
     // Checks if the token is a refresh token by examining the "type" claim in the token's payload
     public boolean isRefreshToken(String token) {
