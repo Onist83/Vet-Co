@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onist.user.model.UserModel;
+import com.onist.user.dto.CreateUserRequest;
+import com.onist.user.dto.UpdateUserRequest;
+import com.onist.user.dto.UserResponse;
 import com.onist.user.service.UserService;
 
 import jakarta.validation.Valid;
@@ -29,35 +31,38 @@ public class UserController {
 
     // Create a new User (Admin, Manager, or User)
     @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel user) {
-        UserModel created = userService.createUser(
-            user.getEmail(),
-            user.getPassword(),
-            user.getFirstname(),
-            user.getLastname(),
-            user.getRole()
-         );
-         return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
+   public ResponseEntity<UserResponse> createUser(
+        @Valid @RequestBody CreateUserRequest request) {
 
+    UserResponse created = userService.createUser(request);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(created);
+}
+    
     //  Retrieves the list of all Users
     @GetMapping("/all")
-    public ResponseEntity<List<UserModel>> findAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
+    public ResponseEntity<List<UserResponse>> findAllUsers() {
+    return ResponseEntity.ok(userService.getAllUsers());
+}
 
     // Updates the information of an existing User
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserModel> updateUser (@PathVariable Long id, @Valid @RequestBody UserModel user) {
-        UserModel updated = userService.updateUser(id, user);
-        return ResponseEntity.ok(updated);
-    }
+    public ResponseEntity<UserResponse> updateUser(
+        @PathVariable Long id,
+        @Valid @RequestBody UpdateUserRequest request) {
+
+    UserResponse updated = userService.updateUser(id, request);
+
+    return ResponseEntity.ok(updated);
+}
 
     // Deletes a User by their Id
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+
         userService.deleteUserById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
