@@ -9,10 +9,10 @@ public class LoginRequest {
     // The LoginRequest class represents the data transfer object (DTO) for user login requests
     // It contains the email and password fields, which are validated using Jakarta Bean Validation annotations
 
-    @NotBlank(message = "The email address is required")
-    @Email(message = "Invalid email format")
+    @NotBlank(message = "L'email est obligatoire")
+    @Email(message = "L'email est non valide")
     private String email;
 
-    @NotBlank(message = "The password is required")
+    @NotBlank(message = "Le mot de passe est obligatoire")
     private String password;
 }

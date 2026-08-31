@@ -2,6 +2,7 @@ package com.onist.user.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.onist.user.exception.InvalidRefreshTokenException;
@@ -21,6 +22,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final UserService userService;
 
 // Centralizes all authentication logic: initial login and token renewal via refresh token.
  
@@ -34,7 +36,7 @@ public class AuthService {
 
     // Fetch user details from the database
     UserModel user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new UserNotFoundException("User not found: " + request.getEmail()));
+            .orElseThrow(() -> new UserNotFoundException("L'utilisateur avec l'email: " + request.getEmail() + " n'as pas été trouvé"));
 
     // Generate JWT access and refresh tokens
         String accessToken = jwtTokenProvider.generateToken(user);
@@ -46,7 +48,8 @@ public class AuthService {
             user.getEmail(),
             user.getRole().name(),
             user.getFirstname(),
-            user.getLastname()
+            user.getLastname(),
+            user.isMustChangePassword()
         );   
     }
 
@@ -54,13 +57,17 @@ public class AuthService {
     // Method to refresh JWT tokens using a valid refresh token
     public LoginResponse refreshToken(String refreshToken) {
         if (!jwtTokenProvider.validateToken(refreshToken) || !jwtTokenProvider.isRefreshToken(refreshToken)) {
-            throw new InvalidRefreshTokenException("Invalid refresh token or expired: " + refreshToken);
+            throw new InvalidRefreshTokenException("Token: "+ refreshToken + " invalide ou expiré");
         }
 
     // Extract email from the refresh token and fetch user details
         String email = jwtTokenProvider.getEmailFromToken(refreshToken);
         UserModel user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found: " + email));
+                .orElseThrow(() -> new UserNotFoundException("L'utilisateur avec l'email: " + email + " n'as pas été trouvé"));
+
+        if (!user.isEnabled()) {
+            throw new InvalidRefreshTokenException("L'email: " + email + " est désactivé");
+        }
         
     // Generate new JWT access and refresh tokens            
         String newAccessToken = jwtTokenProvider.generateToken(user);
@@ -72,7 +79,14 @@ public class AuthService {
             user.getEmail(),
             user.getRole().name(),
             user.getFirstname(),
-            user.getLastname()
+            user.getLastname(),
+            user.isMustChangePassword()
         );
-    }   
+    } 
+
+    // Change the logged-in user's password
+    public void changePassword(String newPassword) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        userService.changePassword(email, newPassword);
+    }  
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onist.user.service.AuthService;
+import com.onist.user.service.dto.ChangePasswordRequest;
 import com.onist.user.service.dto.LoginRequest;
 import com.onist.user.service.dto.LoginResponse;
 import com.onist.user.service.dto.RefreshTokenRequest;
@@ -30,5 +31,12 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
+    }
+
+    // Mandatory password change upon first login (or voluntary change thereafter)
+    @PostMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        authService.changePassword(request.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 }

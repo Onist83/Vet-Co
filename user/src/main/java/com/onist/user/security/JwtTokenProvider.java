@@ -66,9 +66,9 @@ public class JwtTokenProvider {
     try {
         Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
         return true;
-    } catch (JwtException e) {
-        return false;
-        }
+    } catch (JwtException | IllegalArgumentException e) {
+    return false;
+        }   
     }
 
     // Checks if the token is a refresh token by examining the "type" claim in the token's payload

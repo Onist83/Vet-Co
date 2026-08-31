@@ -35,9 +35,10 @@ public class UserSecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
                 .requestMatchers("/api/v1/auth/login").permitAll()
-                .requestMatchers("/api/v1/auth/refresh").permitAll()   
-                .requestMatchers("/api/v1/auth/user").hasRole("ADMIN")
-                .requestMatchers("/api/v1/user/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/auth/refresh").permitAll()
+                .requestMatchers("/api/v1/auth/change-password").authenticated()   
+                .requestMatchers("/api/v1/user/**")
+                    .hasAnyRole("ADMIN", "SUPER_MANAGER", "MANAGER")
                 .anyRequest().authenticated())
             .addFilterBefore(jwtUserAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
