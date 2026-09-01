@@ -6,12 +6,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,46 +32,35 @@ public class AnimalModel {
     private Long id;
 
     @Column(name="name", nullable = false)
-    @NotBlank(message="Le prénom de l'animal doit être renseigné")
     private String name;
 
-    @Column(name="firstName_of_owner", nullable = false)
-    @NotBlank(message="Le prénom du propriétaire doit être renseigné")
-    private String firstNameOfOwner;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(name="owner_id", nullable = false)
+    private Owner owner;
+ 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name="second_owner_id")
+    private Owner secondOwner;
 
-    @Column(name="lastName_of_owner", nullable = false)
-    @NotBlank(message="Le nom du propriétaire doit être renseigné")
-    private String lastNameOfOwner;
-
-     @Column(name="firstName_of_second_owner")
-    private String firstNameOfSecondOwner;
-
-    @Column(name="lastName_of_second_owner")
-    private String lastNameOfSecondOwner;
-
-    @Column(name="Birth_date")
-    @NotNull(message = "La date de naissance doit être renseignée")
+    @Column(name="birth_date")
     private LocalDate birthdate;
 
-    @Column(name="species", nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull(message="La classification de l'animal doit être renseigné")
+    @Column(name="species", nullable = false)
     private Species species;
 
     @Column(name = "animal_family", nullable = false)
-    @NotBlank(message = "L'espèce précise de l'animal doit être renseignée")
     private String animalFamily;
 
     @Column(name="breed")
     private String breed;
 
-    @Column(name="gender", nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull(message="Le genre de l'animal doit être renseigné")
+    @Column(name="gender", nullable = false)
     private Gender gender;
 
     @Column(name="weight")
-    private double weight;
+    private Double weight;
 
     @Column(name="chip_number", unique = true)
     private String chipNumber;
