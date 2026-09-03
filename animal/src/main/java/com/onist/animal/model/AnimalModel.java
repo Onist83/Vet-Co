@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,11 +36,11 @@ public class AnimalModel {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @Column(name="owner_id", nullable = false)
+    @JoinColumn(name="owner_id", nullable = false)
     private Owner owner;
  
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name="second_owner_id")
+    @JoinColumn(name="second_owner_id")
     private Owner secondOwner;
 
     @Column(name="birth_date")

@@ -23,6 +23,6 @@ public class AnimalResponse {
     private String animalFamily;
     private String breed;
     private Gender gender;
-    private double weight;
+    private Double weight;
     private String chipNumber;
 }

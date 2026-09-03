@@ -35,6 +35,10 @@ public class CreateAnimalRequest {
     @NotNull(message="Le genre de l'animal doit être renseigné")
     private Gender gender;
 
+    private String firstNameOfSecondOwner;
+
+    private String lastNameOfSecondOwner;
+    
     private String breed;
 
     private Double weight;

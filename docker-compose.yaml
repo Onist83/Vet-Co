@@ -70,27 +70,27 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       SPRING_PROFILES_ACTIVE: dev
       APP_BOOTSTRAP_ADMIN_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD}
-      APP_BOOTSTRAP_SUPER_MANAGER_PASSWORD: ${MANAGER_PRINCIPAL_BOOTSTRAP_PASSWORD}
+      APP_BOOTSTRAP_SUPER_MANAGER_PASSWORD: ${SUPER_MANAGER_BOOTSTRAP_PASSWORD}
       APP_BOOTSTRAP_USER_PASSWORD: ${USER_BOOTSTRAP_PASSWORD}
       
       
-  # animal:
-  #   build: ./animal
-  #   depends_on:
-  #     consul:
-  #       condition: service_healthy
-  #     mysql:
-  #       condition: service_healthy
-  #     configserver:
-  #        condition: service_started
-  #   ports:
-  #     - "8010:8010"
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/animal_db
-  #     SPRING_DATASOURCE_USERNAME: root
-  #     SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-  #     SPRING_CLOUD_CONSUL_HOST: consul
-  #     SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+  animal:
+    build: ./animal
+    depends_on:
+      consul:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      configserver:
+         condition: service_started
+    ports:
+      - "8010:8010"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/animal_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
 
   # commentary:
   #   build: ./commentary
@@ -130,8 +130,8 @@ services:
           condition: service_healthy
         user:
           condition: service_started
-        # animal:
-        #   condition: service_started
+        animal:
+          condition: service_started
         # commentary:
         #   condition: service_started
         configserver:

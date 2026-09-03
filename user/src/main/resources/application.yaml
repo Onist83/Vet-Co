@@ -9,27 +9,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-#####EUREKA######
-# eureka:
-#   client:
-#     service-url:
-#       defaultZone: http://localhost:8761/eureka/ 
-
-#####CONSUL######
-  # cloud: 
-  #   consul:
-  #     host: consul
-  #     port: 8500
-  #     discovery:
-  #       prefer-ip-address: true
-  #       health-check-path: /actuator/health
-  #       health-check-interval: 15s
-  #       instance-id: ${spring.application.name}:${server.port}
-
     config:
     import: optional:configserver:http://configserver:8888      
 
-# jwt:
-#   secret: ${JWT_SECRET}
-#   expiration: 8640000 # 1 day in milliseconds
-#   refresh-expiration: 604800000 # 7 days in milliseconds
