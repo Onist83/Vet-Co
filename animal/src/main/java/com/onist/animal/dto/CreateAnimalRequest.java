@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+// This class is used to represent the request for creating a new animal in the API
 @Getter
 @Setter
 public class CreateAnimalRequest {

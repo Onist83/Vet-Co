@@ -19,6 +19,8 @@ import com.onist.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+// The UserService class provides methods for managing user accounts, including creating, updating, deleting, and retrieving users
+//  It also handles password changes and enforces role-based access control for user management operations
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -47,7 +49,8 @@ public class UserService {
         return actingRole == Role.ADMIN || actingRole == Role.SUPER_MANAGER;
     }
 
-    // Creates a new user in the system after checking if the email already exists. If the email is unique, it encodes the password and saves the user to the repository
+    // Creates a new user in the system after checking if the email already exists. 
+    // If the email is unique, it encodes the password and saves the user to the repository
     public UserResponse createUser(CreateUserRequest request) {
 
     UserModel actingUser = getCurrentActingUser();
@@ -64,6 +67,7 @@ public class UserService {
             );
         }
 
+        // Creates a new UserModel object with the provided details, encodes the password, and saves it to the repository
         UserModel user = UserModel.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -78,6 +82,7 @@ public class UserService {
         return toUserResponse(savedUser);
     }
 
+        // Converts a UserModel entity to a UserResponse DTO for returning user information in API responses
         private UserResponse toUserResponse(UserModel user) {
 
         return UserResponse.builder()
@@ -94,6 +99,14 @@ public class UserService {
     // Retrieves a user by their unique Id. If the user is not found, it throws a UserNotFoundException
     public Optional<UserModel> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    // Searches users by their name, last name, or email
+    public List<UserResponse> searchUsers(String query) {
+        return userRepository.searchUsers(query)
+                .stream()
+                .map(this::toUserResponse)
+                .toList();
     }
 
     // Retrieves a user by their unique Id. If the user is not found, it throws a UserNotFoundException

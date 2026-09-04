@@ -8,6 +8,7 @@ import com.onist.animal.model.Species;
 import lombok.Builder;
 import lombok.Getter;
 
+// This class is used to represent the response of an animal entity in the API
 @Getter
 @Builder
 public class AnimalResponse {

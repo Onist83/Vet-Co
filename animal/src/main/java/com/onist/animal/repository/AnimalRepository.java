@@ -16,12 +16,14 @@ public interface AnimalRepository extends JpaRepository<AnimalModel, Long> {
     
     
     @Query("""
-             SELECT a FROM AnimalModel a
-        WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :query, '%'))
-           OR LOWER(a.owner.firstName) LIKE LOWER(CONCAT('%', :query, '%'))
-           OR LOWER(a.owner.lastName) LIKE LOWER(CONCAT('%', :query, '%'))
-           OR LOWER(a.secondOwner.firstName) LIKE LOWER(CONCAT('%', :query, '%'))
-           OR LOWER(a.secondOwner.lastName) LIKE LOWER(CONCAT('%', :query, '%'))
+            SELECT a FROM AnimalModel a
+            LEFT JOIN a.owner o
+            LEFT JOIN a.secondOwner so
+            WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :query, '%'))
+                OR LOWER(o.firstName) LIKE LOWER(CONCAT('%', :query, '%'))
+                OR LOWER(o.lastName) LIKE LOWER(CONCAT('%', :query, '%'))
+                OR LOWER(so.firstName) LIKE LOWER(CONCAT('%', :query, '%'))
+                OR LOWER(so.lastName) LIKE LOWER(CONCAT('%', :query, '%'))
             """)
             List<AnimalModel>searchByNameOrOwner(@Param("query")String query);           
 }

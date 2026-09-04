@@ -34,7 +34,8 @@ public class UserSecurityConfig {
     private final JwtUserAuthenticationFilter jwtUserAuthenticationFilter;
     private final ObjectMapper objectMapper;
 
-    // Configures the security filter chain for the application, defining how requests are secured and which endpoints require authentication or specific roles
+    // Configures the security filter chain for the application, defining how requests are secured and
+    //  which endpoints require authentication or specific roles
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())

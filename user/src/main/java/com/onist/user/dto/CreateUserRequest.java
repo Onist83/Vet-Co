@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+// This class is used to represent the request for creating a new user in the API
 @Getter
 @Setter
 public class CreateUserRequest {

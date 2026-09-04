@@ -91,6 +91,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+      JWT_SECRET: ${JWT_SECRET}
 
   # commentary:
   #   build: ./commentary

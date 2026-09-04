@@ -12,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+// Global exception handler for the application. It catches specific exceptions thrown by the application and
+//  returns a structured JSON response with an appropriate HTTP status code
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -32,7 +34,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
     
-    //
+    // Handles the case where a chip number already exists (409)
     @ExceptionHandler(ChipNumberAlreadyExistsException.class)
     public ResponseEntity<Object> handleChipNumberExists(ChipNumberAlreadyExistsException ex) {
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage());

@@ -15,6 +15,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+// The JwtTokenProvider class is responsible for generating and validating JSON Web Tokens (JWTs)
+//  for user authentication and authorization in the application. It uses a secret key to sign the tokens and
+//  provides methods to generate access and refresh tokens, validate tokens, and extract information from the tokens
 @Component
 public class JwtTokenProvider {
 

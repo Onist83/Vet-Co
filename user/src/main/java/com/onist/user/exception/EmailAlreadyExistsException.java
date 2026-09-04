@@ -1,6 +1,6 @@
 package com.onist.user.exception;
 
-// Email already used
+// Exception thrown when trying to create a user with an email that already exists in the system
 public class EmailAlreadyExistsException extends RuntimeException {
     public EmailAlreadyExistsException(String message) {
         super(message);
