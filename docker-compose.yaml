@@ -25,12 +25,18 @@ services:
       timeout: 5s
       retries: 10
 
-  # mongo: 
-  #   image: mongo:7.0
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo_data:/data/db
+  mongo: 
+    image: mongo:7.0
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s  
       
   configserver:
     build: ./configserver
@@ -93,21 +99,22 @@ services:
       SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
       JWT_SECRET: ${JWT_SECRET}
 
-  # commentary:
-  #   build: ./commentary
-  #   depends_on:
-  #     consul:
-  #       condition: service_healthy
-  #     mongo:
-  #       condition: service_started
-  #     configserver:
-  #       condition: service_started
-  #   ports:
-  #     - "8030:8030"
-  #   environment:
-  #     SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/commentary_db
-  #     SPRING_CLOUD_CONSUL_HOST: consul
-  #     SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+  commentary:
+    build: ./commentary
+    depends_on:
+      consul:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+    ports:
+      - "8030:8030"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/commentary_db
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+      JWT_SECRET: ${JWT_SECRET}
 
   # appointment:
   #   build: ./appointment
@@ -115,7 +122,7 @@ services:
   #     consul:
   #       condition: service_healthy
   #     patient:
-  #       condition: service_started
+  #       condition: service_healthy
   #     notes-service:
   #       condition: service_started
   #   ports:
@@ -133,8 +140,8 @@ services:
           condition: service_started
         animal:
           condition: service_started
-        # commentary:
-        #   condition: service_started
+        commentary:
+          condition: service_started
         configserver:
           condition: service_healthy
       ports:
