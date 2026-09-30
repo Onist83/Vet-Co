@@ -9,7 +9,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-      
+
   mysql:
     image: mysql:8.0
     environment:
@@ -18,14 +18,24 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql   
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
 
-  mongo: 
+  mongo:
     image: mongo:7.0
     ports:
       - "27018:27017"
@@ -36,20 +46,27 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-      start_period: 10s  
-      
+      start_period: 10s
+
   configserver:
     build: ./configserver
     depends_on:
-        consul:
-          condition: service_healthy
+      consul:
+        condition: service_healthy
     ports:
       - "8888:8888"
     environment:
       GITHUB_USERNAME: ${GITHUB_USERNAME}
       GITHUB_TOKEN: ${GITHUB_TOKEN}
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8888/actuator/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "-q",
+          "http://localhost:8888/actuator/health",
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -63,7 +80,7 @@ services:
       mysql:
         condition: service_healthy
       configserver:
-         condition: service_healthy
+        condition: service_healthy
     ports:
       - "8020:8020"
     environment:
@@ -78,8 +95,7 @@ services:
       APP_BOOTSTRAP_ADMIN_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD}
       APP_BOOTSTRAP_SUPER_MANAGER_PASSWORD: ${SUPER_MANAGER_BOOTSTRAP_PASSWORD}
       APP_BOOTSTRAP_USER_PASSWORD: ${USER_BOOTSTRAP_PASSWORD}
-      
-      
+
   animal:
     build: ./animal
     depends_on:
@@ -88,7 +104,7 @@ services:
       mysql:
         condition: service_healthy
       configserver:
-         condition: service_started
+        condition: service_started
     ports:
       - "8010:8010"
     environment:
@@ -116,39 +132,43 @@ services:
       SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
       JWT_SECRET: ${JWT_SECRET}
 
-  # appointment:
-  #   build: ./appointment
-  #   depends_on:
-  #     consul:
-  #       condition: service_healthy
-  #     patient:
-  #       condition: service_healthy
-  #     notes-service:
-  #       condition: service_started
-  #   ports:
-  #     - "8070:8070"
-  #   environment:
-  #     SPRING_CLOUD_CONSUL_HOST: consul
-  #     SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+  appointment:
+    build: ./appointment
+    depends_on:
+      consul:
+        condition: service_healthy
+      patient:
+        condition: service_healthy
+      notes-service:
+        condition: service_started
+    ports:
+      - "8040:8040"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/appointment_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+      JWT_SECRET: ${JWT_SECRET}
 
   gateway:
-      build: ./gateway
-      depends_on:
-        consul:
-          condition: service_healthy
-        user:
-          condition: service_started
-        animal:
-          condition: service_started
-        commentary:
-          condition: service_started
-        configserver:
-          condition: service_healthy
-      ports:
-        - "8822:8822"
-      environment:
-        SPRING_CLOUD_CONSUL_HOST: consul
-        SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+    build: ./gateway
+    depends_on:
+      consul:
+        condition: service_healthy
+      user:
+        condition: service_started
+      animal:
+        condition: service_started
+      commentary:
+        condition: service_started
+      configserver:
+        condition: service_healthy
+    ports:
+      - "8822:8822"
+    environment:
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
 
   # frontend:
   #     build: ./frontend
@@ -157,9 +177,6 @@ services:
   #     ports:
   #       - "4200:80"
 
-
-
 volumes:
   mysql_data:
-  mongo_data:         
-
+  mongo_data:

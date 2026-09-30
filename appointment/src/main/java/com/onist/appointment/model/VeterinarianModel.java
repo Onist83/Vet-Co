@@ -1,4 +1,4 @@
-package com.onist.animal.model;
+package com.onist.appointment.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +19,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "owners")
-public class Owner {
+@Table(name = "veterinarians")
+public class VeterinarianModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +31,5 @@ public class Owner {
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
+
 }

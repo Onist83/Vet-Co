@@ -11,7 +11,7 @@ import com.onist.animal.exception.AnimalNotFoundException;
 import com.onist.animal.exception.ChipNumberAlreadyExistsException;
 import com.onist.animal.feign.CommentaryFeign;
 import com.onist.animal.model.AnimalModel;
-import com.onist.animal.model.Owner;
+import com.onist.animal.model.OwnerModel;
 import com.onist.animal.repository.AnimalRepository;
 import com.onist.animal.repository.OwnerRepository;
 
@@ -24,14 +24,15 @@ public class AnimalService {
     private final CommentaryFeign commentaryFeign;
     private final OwnerRepository ownerRepository;
 
-    // Recherche un Owner existant par prénom/nom (insensible à la casse), sinon le crée
-    private Owner findOrCreateOwner(String firstName, String lastName) {
+    // Recherche un Owner existant par prénom/nom (insensible à la casse), sinon le
+    // crée
+    private OwnerModel findOrCreateOwner(String firstName, String lastName) {
         if (firstName == null || lastName == null) {
             return null;
         }
         return ownerRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName)
                 .orElseGet(() -> ownerRepository.save(
-                        Owner.builder()
+                        OwnerModel.builder()
                                 .firstName(firstName)
                                 .lastName(lastName)
                                 .build()));
@@ -54,7 +55,7 @@ public class AnimalService {
                 .weight(animal.getWeight())
                 .chipNumber(animal.getChipNumber())
                 .build();
-            }
+    }
 
     // Retrieves all animals in the system and maps them to AnimalResponse DTOs
     public List<AnimalResponse> getAllAnimals() {
@@ -73,26 +74,29 @@ public class AnimalService {
                 .toList();
     }
 
-    // Retrieves an animal by its unique id. Throws AnimalNotFoundException if not found
+    // Retrieves an animal by its unique id. Throws AnimalNotFoundException if not
+    // found
     public AnimalResponse animalById(Long id) {
         return toAnimalResponse(getAnimalOrThrow(id));
     }
 
-    // Retrieves an animal by its unique id. Throws AnimalNotFoundException if not found
+    // Retrieves an animal by its unique id. Throws AnimalNotFoundException if not
+    // found
     private AnimalModel getAnimalOrThrow(Long id) {
         return animalRepository.findById(id)
                 .orElseThrow(() -> new AnimalNotFoundException("Animal not found with id " + id));
     }
 
-    // Creates a new animal in the system after checking if the chipNumber already exists. If the chipNumber is unique, saves the animal to the repository.
+    // Creates a new animal in the system after checking if the chipNumber already
+    // exists. If the chipNumber is unique, saves the animal to the repository.
     public AnimalResponse createAnimal(CreateAnimalRequest request) {
-         if (request.getChipNumber() != null && animalRepository.existsByChipNumber(request.getChipNumber())) {
+        if (request.getChipNumber() != null && animalRepository.existsByChipNumber(request.getChipNumber())) {
             throw new ChipNumberAlreadyExistsException("Microchip number already in use: " + request.getChipNumber());
-         }
+        }
 
-        Owner owner = findOrCreateOwner(request.getFirstNameOfOwner(), request.getLastNameOfOwner());
-        Owner secondOwner = findOrCreateOwner(request.getFirstNameOfSecondOwner(), request.getLastNameOfSecondOwner());
- 
+        OwnerModel owner = findOrCreateOwner(request.getFirstNameOfOwner(), request.getLastNameOfOwner());
+        OwnerModel secondOwner = findOrCreateOwner(request.getFirstNameOfSecondOwner(),
+                request.getLastNameOfSecondOwner());
 
         AnimalModel animal = AnimalModel.builder()
                 .name(request.getName())
@@ -111,19 +115,20 @@ public class AnimalService {
         return toAnimalResponse(savedAnimal);
     }
 
-    // Retrieves a animal by their unique Id. If the animal is not found, it throws a AnimalNotFoundException
+    // Retrieves a animal by their unique Id. If the animal is not found, it throws
+    // a AnimalNotFoundException
     public AnimalResponse updateAnimal(Long id, UpdateAnimalRequest request) {
-       AnimalModel existingAnimal = getAnimalOrThrow(id);
+        AnimalModel existingAnimal = getAnimalOrThrow(id);
 
-        if(request.getChipNumber() != null
+        if (request.getChipNumber() != null
                 && !request.getChipNumber().equals(existingAnimal.getChipNumber())
                 && animalRepository.existsByChipNumber(request.getChipNumber())) {
             throw new ChipNumberAlreadyExistsException("Microchip number already in use: " + request.getChipNumber());
         }
 
-        Owner owner = findOrCreateOwner(request.getFirstNameOfOwner(), request.getLastNameOfOwner());
-        Owner secondOwner = findOrCreateOwner(request.getFirstNameOfSecondOwner(), request.getLastNameOfSecondOwner());
-
+        OwnerModel owner = findOrCreateOwner(request.getFirstNameOfOwner(), request.getLastNameOfOwner());
+        OwnerModel secondOwner = findOrCreateOwner(request.getFirstNameOfSecondOwner(),
+                request.getLastNameOfSecondOwner());
 
         existingAnimal.setName(request.getName());
         existingAnimal.setGender(request.getGender());
@@ -140,7 +145,8 @@ public class AnimalService {
         return toAnimalResponse(updatedAnimal);
     }
 
-    // Deletes a animal by their unique Id. If the animal is not found, it throws a AnimalNotFoundException
+    // Deletes a animal by their unique Id. If the animal is not found, it throws a
+    // AnimalNotFoundException
     public void deleteAnimalById(Long id) {
         if (!animalRepository.existsById(id)) {
             throw new AnimalNotFoundException("Animal not found with id " + id);

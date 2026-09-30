@@ -26,14 +26,13 @@ public class GlobalExceptionHandler {
     // Method to construct a uniform JSON response
     private ResponseEntity<Object> buildResponse(HttpStatus status, String message) {
         Map<String, Object> body = Map.of(
-            "timestamp", Instant.now().toString(),
-            "status", status.value(),
-            "error", status.getReasonPhrase(),
-            "message", message
-        );
+                "timestamp", Instant.now().toString(),
+                "status", status.value(),
+                "error", status.getReasonPhrase(),
+                "message", message);
         return ResponseEntity.status(status).body(body);
     }
-    
+
     // Handles the case where a chip number already exists (409)
     @ExceptionHandler(ChipNumberAlreadyExistsException.class)
     public ResponseEntity<Object> handleChipNumberExists(ChipNumberAlreadyExistsException ex) {

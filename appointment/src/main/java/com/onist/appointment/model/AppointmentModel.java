@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -25,7 +26,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "appointments")
+@Table(name = "appointments", indexes = {
+        @Index(name = "idx_appointment_date", columnList = "appointment_date_time"),
+        @Index(name = "idx_appointment_veterinarian_id", columnList = "veterinarian_id")
+})
 public class AppointmentModel {
 
     @Id

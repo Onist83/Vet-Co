@@ -31,10 +31,12 @@ public class UserService {
     private UserModel getCurrentActingUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("L'utilisateur avec l'email: " + email + " n'as pas été trouvé"));
+                .orElseThrow(() -> new UserNotFoundException(
+                        "L'utilisateur avec l'email: " + email + " n'as pas été trouvé"));
     }
 
-    // Determines whether the "actingRole" role has the right to manage an account with the "targetRole" role
+    // Determines whether the "actingRole" role has the right to manage an account
+    // with the "targetRole" role
     private boolean canManage(Role actingRole, Role targetRole) {
         return switch (actingRole) {
             case ADMIN -> true;
@@ -44,30 +46,31 @@ public class UserService {
         };
     }
 
-    // Only the Admin and Lead Manager can change an account's role (promotion/demotion)
+    // Only the Admin and Lead Manager can change an account's role
+    // (promotion/demotion)
     private boolean canChangeRole(Role actingRole) {
         return actingRole == Role.ADMIN || actingRole == Role.SUPER_MANAGER;
     }
 
-    // Creates a new user in the system after checking if the email already exists. 
-    // If the email is unique, it encodes the password and saves the user to the repository
+    // Creates a new user in the system after checking if the email already exists.
+    // If the email is unique, it encodes the password and saves the user to the
+    // repository
     public UserResponse createUser(CreateUserRequest request) {
 
-    UserModel actingUser = getCurrentActingUser();
+        UserModel actingUser = getCurrentActingUser();
 
         if (!canManage(actingUser.getRole(), request.getRole())) {
             throw new ForbiddenOperationException(
-                    "Vous n'avez pas le droit de créer un compte avec ce rôle"
-            );
+                    "Vous n'avez pas le droit de créer un compte avec ce rôle");
         }
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException(
-                    "L'email existe déjà: " + request.getEmail()
-            );
+                    "L'email existe déjà: " + request.getEmail());
         }
 
-        // Creates a new UserModel object with the provided details, encodes the password, and saves it to the repository
+        // Creates a new UserModel object with the provided details, encodes the
+        // password, and saves it to the repository
         UserModel user = UserModel.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -82,8 +85,9 @@ public class UserService {
         return toUserResponse(savedUser);
     }
 
-        // Converts a UserModel entity to a UserResponse DTO for returning user information in API responses
-        private UserResponse toUserResponse(UserModel user) {
+    // Converts a UserModel entity to a UserResponse DTO for returning user
+    // information in API responses
+    private UserResponse toUserResponse(UserModel user) {
 
         return UserResponse.builder()
                 .id(user.getId())
@@ -94,9 +98,10 @@ public class UserService {
                 .enabled(user.isEnabled())
                 .mustChangePassword(user.isMustChangePassword())
                 .build();
-        }
+    }
 
-    // Retrieves a user by their unique Id. If the user is not found, it throws a UserNotFoundException
+    // Retrieves a user by their unique Id. If the user is not found, it throws a
+    // UserNotFoundException
     public Optional<UserModel> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -109,71 +114,82 @@ public class UserService {
                 .toList();
     }
 
-    // Retrieves a user by their unique Id. If the user is not found, it throws a UserNotFoundException
+    // Retrieves a user by their unique Id. If the user is not found, it throws a
+    // UserNotFoundException
     public List<UserResponse> getAllUsers() {
 
-    return userRepository.findAll()
-            .stream()
-            .map(this::toUserResponse)
-            .toList();
-}
-    // Retrieves a user by their unique Id. If the user is not found, it throws a UserNotFoundException
+        return userRepository.findAll()
+                .stream()
+                .map(this::toUserResponse)
+                .toList();
+    }
+
+    // Retrieves a user by their unique Id. If the user is not found, it throws a
+    // UserNotFoundException
+    public UserResponse getUserById(Long id) {
+
+        UserModel user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(
+                        "L'utilisateur avec l'ID: " + id + " n'a pas été trouvé"));
+
+        return toUserResponse(user);
+    }
+
+    // Retrieves a user by their unique Id. If the user is not found, it throws a
+    // UserNotFoundException
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
 
-    UserModel actingUser = getCurrentActingUser();
+        UserModel actingUser = getCurrentActingUser();
 
-    UserModel existingUser = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(
-                    "L'utilisateur avec l'ID: " + id + " n'a pas été trouvé"
-            ));
+        UserModel existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(
+                        "L'utilisateur avec l'ID: " + id + " n'a pas été trouvé"));
 
-    if (!canManage(actingUser.getRole(), existingUser.getRole())) {
-        throw new ForbiddenOperationException(
-                "Vous n'avez pas le droit de modifier ce compte"
-        );
-    }
-
-    existingUser.setFirstname(request.getFirstname());
-    existingUser.setLastname(request.getLastname());
-
-    if (!existingUser.getEmail().equalsIgnoreCase(request.getEmail())) {
-
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException(
-                    "L'email: " + request.getEmail() + " existe déjà"
-            );
-        }
-
-        existingUser.setEmail(request.getEmail());
-    }
-
-    if (request.getRole() != existingUser.getRole()) {
-
-        if (!canChangeRole(actingUser.getRole())) {
+        if (!canManage(actingUser.getRole(), existingUser.getRole())) {
             throw new ForbiddenOperationException(
-                    "Vous n'avez pas le droit de changer le rôle de ce compte"
-            );
+                    "Vous n'avez pas le droit de modifier ce compte");
         }
 
-        if (!canManage(actingUser.getRole(), request.getRole())) {
-            throw new ForbiddenOperationException(
-                    "Vous n'avez pas le droit d'attribuer ce rôle"
-            );
+        existingUser.setFirstname(request.getFirstname());
+        existingUser.setLastname(request.getLastname());
+
+        if (!existingUser.getEmail().equalsIgnoreCase(request.getEmail())) {
+
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new EmailAlreadyExistsException(
+                        "L'email: " + request.getEmail() + " existe déjà");
+            }
+
+            existingUser.setEmail(request.getEmail());
         }
 
-        existingUser.setRole(request.getRole());
+        if (request.getRole() != existingUser.getRole()) {
+
+            if (!canChangeRole(actingUser.getRole())) {
+                throw new ForbiddenOperationException(
+                        "Vous n'avez pas le droit de changer le rôle de ce compte");
+            }
+
+            if (!canManage(actingUser.getRole(), request.getRole())) {
+                throw new ForbiddenOperationException(
+                        "Vous n'avez pas le droit d'attribuer ce rôle");
+            }
+
+            existingUser.setRole(request.getRole());
+        }
+
+        UserModel savedUser = userRepository.save(existingUser);
+
+        return toUserResponse(savedUser);
     }
 
-    UserModel savedUser = userRepository.save(existingUser);
-
-    return toUserResponse(savedUser);
-}
-
-    // Deletes a user by their unique Id. If the user is not found, it throws a UserNotFoundException
+    // Deletes a user by their unique Id. If the user is not found, it throws a
+    // UserNotFoundException
     public void deleteUserById(Long id) {
         UserModel actingUser = getCurrentActingUser();
         UserModel target = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException("L'utilisateur avec l'ID: " + id + " n'as pas été trouvé"));
+                .orElseThrow(
+                        () -> new UserNotFoundException("L'utilisateur avec l'ID: " + id + " n'as pas été trouvé"));
 
         if (!canManage(actingUser.getRole(), target.getRole())) {
             throw new ForbiddenOperationException("Vous n'avez pas le droit de supprimer ce compte");
@@ -181,11 +197,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    // Changes a user's password. Encodes the new password and 
+    // Changes a user's password. Encodes the new password and
     // disables the mustChangePassword flag
     public void changePassword(String email, String newPassword) {
         UserModel user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("L'utilisateur avec l'email: " + email + " n'as pas été trouvé"));
+                .orElseThrow(() -> new UserNotFoundException(
+                        "L'utilisateur avec l'email: " + email + " n'as pas été trouvé"));
 
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setMustChangePassword(false);
