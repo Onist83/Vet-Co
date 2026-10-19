@@ -137,9 +137,9 @@ services:
     depends_on:
       consul:
         condition: service_healthy
-      patient:
+      mysql:
         condition: service_healthy
-      notes-service:
+      configserver:
         condition: service_started
     ports:
       - "8040:8040"
@@ -163,12 +163,18 @@ services:
       commentary:
         condition: service_started
       configserver:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8822:8822"
     environment:
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8822/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   # frontend:
   #     build: ./frontend

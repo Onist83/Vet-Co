@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data // Génère Getters, Setters, ToString, Equals, HashCode
+@Builder // Génère le Builder pattern
+@NoArgsConstructor // Génère le constructeur vide (nécessaire pour Jackson/JPA)
+@AllArgsConstructor // Génère le constructeur avec tous les arguments
 public class AnimalFeignResponse {
     private Long id;
     private String name;

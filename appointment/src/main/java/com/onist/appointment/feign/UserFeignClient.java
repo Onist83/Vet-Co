@@ -15,7 +15,7 @@ public interface UserFeignClient {
     @GetMapping("/api/v1/user/{id}")
     UserFeignResponse getUserById(@PathVariable("id") Long id);
 
-    // NOUVELLE MÉTHODE : Chercher par nom et prénom
+    // NOUVELLE MÉTHODE : Chercher par prénom et nom
     @GetMapping("/api/v1/user/search")
     List<UserFeignResponse> searchUsersByNames(
             @RequestParam String firstName,

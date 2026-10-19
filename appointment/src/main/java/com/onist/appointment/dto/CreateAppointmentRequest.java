@@ -7,11 +7,15 @@ import jakarta.validation.constraints.NotNull;
 
 import com.onist.appointment.model.Reason;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateAppointmentRequest {
 
     @NotNull(message = "L'identifiant de l'animal est obligatoire")
