@@ -15,6 +15,7 @@ import com.onist.user.service.dto.LoginResponse;
 
 import lombok.RequiredArgsConstructor;
 
+// The AuthService class handles user authentication, including login and token refresh operations
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -24,10 +25,10 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
 
-// Centralizes all authentication logic: initial login and token renewal via refresh token.
+// Centralizes all authentication logic: initial login and token renewal via refresh token
  
 
-    // Verifies the email/password via Spring Security, then generates the two tokens.
+    // Verifies the email/password via Spring Security, then generates the two tokens
     // Login method to authenticate user and generate JWT tokens
     public LoginResponse login(LoginRequest request) {
         authenticationManager.authenticate(
@@ -53,7 +54,7 @@ public class AuthService {
         );   
     }
 
-    // Validates the refresh token, retrieves the user, and issues new tokens.
+    // Validates the refresh token, retrieves the user, and issues new tokens
     // Method to refresh JWT tokens using a valid refresh token
     public LoginResponse refreshToken(String refreshToken) {
         if (!jwtTokenProvider.validateToken(refreshToken) || !jwtTokenProvider.isRefreshToken(refreshToken)) {

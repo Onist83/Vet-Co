@@ -25,7 +25,7 @@ import lombok.Setter;
 public class UserModel {
 
     // The UserModel class represents a user entity in the system.
-    // It is annotated with JPA annotations to map it to a database table named "users".
+    // It is annotated with JPA annotations to map it to a database table named "users"
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

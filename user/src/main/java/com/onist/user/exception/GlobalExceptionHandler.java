@@ -16,7 +16,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-// Catch application exceptions and transforms them into HTTP responses
+// Global exception handler for the application. It catches specific exceptions thrown by the application and
+//  returns a structured JSON response with an appropriate HTTP status code
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

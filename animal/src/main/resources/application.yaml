@@ -1,3 +1,18 @@
+#####Animal Service Configuration#####
+server:
+  port: 8010
+
 spring:
   application:
     name: animal
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    config:
+    import: optional:configserver:http://configserver:8888
+
+commentary:
+  service:
+    url: http://commentary-service:8083

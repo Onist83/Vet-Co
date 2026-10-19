@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+// This filter intercepts incoming HTTP requests to authenticate users based on the JWT token provided in the Authorization header
 @Component
 @RequiredArgsConstructor
 public class JwtUserAuthenticationFilter extends OncePerRequestFilter {
@@ -30,8 +31,8 @@ public class JwtUserAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
-    @Override
     // Filters incoming HTTP requests to authenticate users based on the JWT token provided in the Authorization header
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
@@ -46,11 +47,11 @@ public class JwtUserAuthenticationFilter extends OncePerRequestFilter {
                 String email = jwtTokenProvider.getEmailFromToken(token);
                 boolean isChangePasswordRequest = request.getRequestURI().equals(CHANGE_PASSWORD_PATH);
                 
+                // If the user is required to change their password and the current request is not a password change request,
+                //  do not authenticate the user
                 userRepository.findByEmail(email)
                         .filter(UserModel::isEnabled)
                         .ifPresent(user -> {
-                            // Tant que le mot de passe temporaire n'a pas été changé,
-                            // seul l'endpoint de changement de mot de passe est accessible.
                             if (user.isMustChangePassword() && !isChangePasswordRequest) {
                                 return;
                             }

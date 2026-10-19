@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+// The ChangePasswordRequest class represents the data transfer object (DTO) for change password requests
 @Data
 public class ChangePasswordRequest {
     @NotBlank(message = "Le nouveau mot de passe est obligatoire")

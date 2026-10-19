@@ -3,10 +3,10 @@ package com.onist.user.service.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+// The LoginResponse class represents the data transfer object (DTO) for user login responses
 @Data
 @AllArgsConstructor
 public class LoginResponse {
-    // The LoginResponse class represents the data transfer object (DTO) for user login responses
 
     private String token;
     private String refreshToken;

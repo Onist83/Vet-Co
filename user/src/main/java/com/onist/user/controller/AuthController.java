@@ -27,7 +27,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));   
     }
 
-    // Renews the access token using a valid refresh token.
+    // Renews the access token using a valid refresh token
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
