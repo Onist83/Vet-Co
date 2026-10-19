@@ -1,0 +1,15 @@
+com\onist\commentary\service\CommentaryService.class
+com\onist\commentary\controller\CommentaryController.class
+com\onist\commentary\security\CommentarySecurityConfig.class
+com\onist\commentary\CommentaryApplication.class
+com\onist\commentary\dto\CreateCommentaryRequest.class
+com\onist\commentary\security\JwtCommentaryAuthenticationFilter.class
+com\onist\commentary\exception\CommentaryNotFoundException.class
+com\onist\commentary\configMongo\MongoConfig.class
+com\onist\commentary\dto\CommentaryResponse.class
+com\onist\commentary\model\CommentaryModel.class
+com\onist\commentary\security\JwtValidator.class
+com\onist\commentary\model\CommentaryModel$CommentaryModelBuilder.class
+com\onist\commentary\repository\CommentaryRepository.class
+com\onist\commentary\exception\GlobalExceptionHandler.class
+com\onist\commentary\dto\CommentaryResponse$CommentaryResponseBuilder.class
