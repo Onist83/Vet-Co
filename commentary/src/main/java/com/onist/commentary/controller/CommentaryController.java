@@ -2,6 +2,8 @@ package com.onist.commentary.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,17 +19,19 @@ import com.onist.commentary.dto.CommentaryResponse;
 import com.onist.commentary.dto.CreateCommentaryRequest;
 import com.onist.commentary.service.CommentaryService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+// This controller class handles HTTP requests related to commentaries.
+// Cette classe de contrôleur gère les requêtes HTTP relatives aux commentaires.
 @RestController
-@RequestMapping ("/api/v1/commentary")
-@RequiredArgsConstructor 
+@RequestMapping("/api/v1/commentary")
+@RequiredArgsConstructor
 public class CommentaryController {
 
     private final CommentaryService commentaryService;
-    
+
     // Creates a new commentary
+    // Crée un nouveau commentaire
     @PostMapping("/create")
     public ResponseEntity<CommentaryResponse> createCommentary(
             @Valid @RequestBody CreateCommentaryRequest request) {
@@ -37,24 +41,28 @@ public class CommentaryController {
     }
 
     // Retrieves all commentaries, ordered by publication date
+    // Récupère tous les commentaires, triés par date de publication
     @GetMapping("/all")
     public ResponseEntity<List<CommentaryResponse>> findAll() {
         return ResponseEntity.ok(commentaryService.getAllOrderedByDate());
     }
 
     // Retrieves all commentaries for a given animal
+    // Récupère tous les commentaires pour un animal donné
     @GetMapping("/animal/{animalId}")
     public ResponseEntity<List<CommentaryResponse>> findByAnimalId(@PathVariable Long animalId) {
         return ResponseEntity.ok(commentaryService.findAllCommentaryByAnimalId(animalId));
     }
 
     // Retrieves a single commentary by its id
+    // Récupère un seul commentaire par son identifiant
     @GetMapping("/{id}")
     public ResponseEntity<CommentaryResponse> findById(@PathVariable String id) {
         return ResponseEntity.ok(commentaryService.findCommentaryById(id));
     }
 
     // Updates an existing commentary
+    // Met à jour un commentaire existant
     @PutMapping("/update/{id}")
     public ResponseEntity<CommentaryResponse> updateCommentary(
             @PathVariable String id,
@@ -65,13 +73,17 @@ public class CommentaryController {
     }
 
     // Deletes a single commentary by its id
+    // Supprime un seul commentaire par son identifiant
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCommentary(@PathVariable String id) {
         commentaryService.deleteCommentary(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Deletes all commentaries for a given animal — appelé par le service Animal via Feign lors de la suppression d'un animal
+    // Deletes all commentaries for a given animal - called by the Animal service
+    // via Feign when an animal is deleted
+    // Supprime tous les commentaires pour un animal donné - appelé par le service
+    // Animal via Feign lors de la suppression d'un animal
     @DeleteMapping("/animal/{animalId}")
     public ResponseEntity<Void> deleteAllByAnimalId(@PathVariable Long animalId) {
         commentaryService.deleteAllByAnimalId(animalId);

@@ -24,6 +24,10 @@ import com.onist.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+// The UserController class is a REST controller that handles HTTP requests related to user management operations
+// It provides endpoints for creating, updating, deleting, and retrieving user entities, as well as searching for users by name and role
+// La classe UserController est un contrôleur REST qui gère les requêtes HTTP liées aux opérations de gestion des utilisateurs
+// Elle propose des points de terminaison permettant de créer, mettre à jour, supprimer et récupérer des entités utilisateur, ainsi que de rechercher des utilisateurs par nom et par rôle
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
@@ -34,6 +38,9 @@ public class UserController {
     // Handles the creation of a new user entity. It accepts a POST request with a
     // CreateUserRequest payload,
     // validates it, and returns the created UserResponse with a 201 Created status
+    // Gère la création d'une nouvelle entité utilisateur. Elle accepte une requête
+    // POST avec une charge utile CreateUserRequest,
+    // la valide et renvoie le UserResponse créé avec un statut 201 Created
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponse> createUser(
@@ -48,6 +55,10 @@ public class UserController {
     // query parameter and
     // returns a list of UserResponse objects that match the search criteria with a
     // 200 OK status
+    // Gère la recherche d'entités utilisateur par nom. Elle accepte une requête GET
+    // avec un paramètre de requête et
+    // renvoie une liste d'objets UserResponse correspondant aux critères de
+    // recherche avec un statut 200 OK
     @GetMapping("/search")
     public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String query) {
         return ResponseEntity.ok(userService.searchUsers(query));
@@ -55,6 +66,8 @@ public class UserController {
 
     // Retrieves all user entities. It accepts a GET request and
     // returns a list of UserResponse objects with a 200 OK status
+    // Récupère toutes les entités utilisateur. Elle accepte une requête GET et
+    // renvoie une liste d'objets UserResponse avec un statut 200 OK
     @GetMapping("/all")
     public ResponseEntity<List<UserResponse>> findAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -63,6 +76,9 @@ public class UserController {
     // Retrieves a single user entity by its ID. It accepts a GET request with a
     // path variable for the
     // user ID and returns the matching UserResponse with a 200 OK status
+    // Récupère une seule entité utilisateur par son ID. Elle accepte une requête
+    // GET avec une variable de chemin pour l'ID de l'utilisateur et renvoie le
+    // UserResponse correspondant avec un statut 200 OK
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
@@ -72,6 +88,10 @@ public class UserController {
     // variable for the user ID and
     // a UpdateUserRequest payload, validates it, and returns the updated
     // UserResponse with a 200 OK status
+    // Met à jour une entité utilisateur existante. Elle accepte une requête PUT
+    // avec une variable de chemin pour l'ID de l'utilisateur et une charge utile
+    // UpdateUserRequest, la valide et renvoie le UserResponse mis à jour avec un
+    // statut 200 OK
     @PutMapping("/update/{id}")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
@@ -85,6 +105,9 @@ public class UserController {
     // Deletes an existing user entity by its ID. It accepts a DELETE request with a
     // path variable for the user ID
     // and returns a 204 No Content status if the deletion is successful
+    // Supprime une entité utilisateur existante par son ID. Elle accepte une
+    // requête DELETE avec une variable de chemin pour l'ID de l'utilisateur et
+    // renvoie un statut 204 No Content si la suppression est réussie
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

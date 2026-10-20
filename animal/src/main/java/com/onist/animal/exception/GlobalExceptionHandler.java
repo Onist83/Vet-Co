@@ -14,16 +14,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 // Global exception handler for the application. It catches specific exceptions thrown by the application and
 //  returns a structured JSON response with an appropriate HTTP status code
+
+// Gestionnaire d'exceptions global pour l'application. Il intercepte les exceptions spécifiques levées par l'application et
+// renvoie une réponse JSON structurée avec un code de statut HTTP approprié
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // Handles the case where a animal is not found (404)
+    // Gère le cas où un animal n'est pas trouvé (404)
     @ExceptionHandler(AnimalNotFoundException.class)
     public ResponseEntity<Object> handleAnimalNotFound(AnimalNotFoundException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     // Method to construct a uniform JSON response
+    // Méthode pour construire une réponse JSON uniforme
     private ResponseEntity<Object> buildResponse(HttpStatus status, String message) {
         Map<String, Object> body = Map.of(
                 "timestamp", Instant.now().toString(),
@@ -34,12 +39,14 @@ public class GlobalExceptionHandler {
     }
 
     // Handles the case where a chip number already exists (409)
+    // Gère le cas où un numéro de puce existe déjà (409)
     @ExceptionHandler(ChipNumberAlreadyExistsException.class)
     public ResponseEntity<Object> handleChipNumberExists(ChipNumberAlreadyExistsException ex) {
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     // Handles request validation errors (@Valid) → 400 Bad Request
+    // Gère les erreurs de validation de requête (@Valid) → 400 Bad Request
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationErrors(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
@@ -51,6 +58,7 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // Handles all unhandled exceptions (500 server error)
+    // Gère toutes les exceptions non gérées (erreur serveur 500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnexpected(Exception ex) {
         log.error("Erreur inattendue", ex);

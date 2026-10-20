@@ -2,13 +2,16 @@ package com.onist.user.service.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.Data;
 
- // The LoginRequest class represents the data transfer object (DTO) for user login requests
+// The LoginRequest class represents the data transfer object (DTO) for user login requests
 // It contains the email and password fields, which are validated using Jakarta Bean Validation annotations
+// La classe LoginRequest représente l'objet de transfert de données (DTO) pour les demandes de connexion des utilisateurs
+// Elle contient les champs email et password, qui sont validés à l'aide d'annotations Jakarta Bean Validation
 @Data
 public class LoginRequest {
-   
+
     @NotBlank(message = "L'email est obligatoire")
     @Email(message = "L'email est non valide")
     private String email;

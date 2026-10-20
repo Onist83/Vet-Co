@@ -20,6 +20,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// Represents the Animal entity in the system, with attributes like name, owner, species, and chip number
+// Représente l'entité Animal dans le système, avec des attributs tels que le nom, le propriétaire, l'espèce et le numéro de puce
 @Entity
 @Getter
 @Setter

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 // This class is used to represent the response of an animal entity in the API
+// Cette classe sert à représenter la réponse d'une entité animale dans l'API
 @Getter
 @Builder
 public class AnimalResponse {

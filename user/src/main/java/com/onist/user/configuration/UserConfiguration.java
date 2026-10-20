@@ -11,9 +11,14 @@ import com.onist.user.model.Role;
 import com.onist.user.model.UserModel;
 import com.onist.user.repository.UserRepository;
 
-
-
-// User configuration + default account initialization
+// The UserConfiguration class is responsible for bootstrapping the application 
+// with default user accounts (Admin, Manager, and User) when the application starts 
+// It checks if the accounts already exist in the database and creates them if they do not,
+//  using the provided passwords from the application properties
+// La classe UserConfiguration est chargée d'initialiser l'application avec
+//  des comptes utilisateur par défaut (Admin, Manager et User) lors du démarrage de l'application 
+// Elle vérifie si ces comptes existent déjà dans la base de données et, dans le cas contraire, 
+// les crée en utilisant les mots de passe définis dans les propriétés de l'application
 @Configuration
 @Profile("dev")
 public class UserConfiguration {
@@ -32,8 +37,8 @@ public class UserConfiguration {
     public CommandLineRunner createAdminUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             if (userRepository.findByEmail("admin@vetetco.com").isEmpty()) {
-               
-            // Create Admin
+
+                // Create Admin
                 UserModel admin = new UserModel();
                 admin.setEmail("admin@vetetco.com");
                 admin.setPassword(passwordEncoder.encode(adminPassword));

@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 
 // The UserService class provides methods for managing user accounts, including creating, updating, deleting, and retrieving users
 //  It also handles password changes and enforces role-based access control for user management operations
+// La classe UserService fournit des méthodes pour gérer les comptes utilisateurs, y compris la création, la mise à jour, la suppression et la récupération des utilisateurs
+//  Elle gère également les changements de mot de passe et applique le contrôle d'accès basé sur les rôles pour les opérations de gestion des utilisateurs
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -28,6 +30,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     // Retrieves the currently authenticated user
+    // Récupère l'utilisateur actuellement authentifié
     private UserModel getCurrentActingUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
@@ -37,6 +40,8 @@ public class UserService {
 
     // Determines whether the "actingRole" role has the right to manage an account
     // with the "targetRole" role
+    // Détermine si le rôle "actingRole" a le droit de gérer un compte avec le rôle
+    // "targetRole"
     private boolean canManage(Role actingRole, Role targetRole) {
         return switch (actingRole) {
             case ADMIN -> true;
@@ -48,6 +53,7 @@ public class UserService {
 
     // Only the Admin and Lead Manager can change an account's role
     // (promotion/demotion)
+    // Seuls l'Admin et le Lead Manager peuvent changer le rôle d'un compte
     private boolean canChangeRole(Role actingRole) {
         return actingRole == Role.ADMIN || actingRole == Role.SUPER_MANAGER;
     }
@@ -55,6 +61,10 @@ public class UserService {
     // Creates a new user in the system after checking if the email already exists.
     // If the email is unique, it encodes the password and saves the user to the
     // repository
+    // Crée un nouvel utilisateur dans le système après avoir vérifié si l'email
+    // existe déjà.
+    // Si l'email est unique, il encode le mot de passe et enregistre l'utilisateur
+    // dans le référentiel
     public UserResponse createUser(CreateUserRequest request) {
 
         UserModel actingUser = getCurrentActingUser();
@@ -71,6 +81,8 @@ public class UserService {
 
         // Creates a new UserModel object with the provided details, encodes the
         // password, and saves it to the repository
+        // Crée un nouvel objet UserModel avec les détails fournis, encode le mot de
+        // passe et l'enregistre dans le référentiel
         UserModel user = UserModel.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -87,6 +99,8 @@ public class UserService {
 
     // Converts a UserModel entity to a UserResponse DTO for returning user
     // information in API responses
+    // Convertit une entité UserModel en un DTO UserResponse pour renvoyer les
+    // informations de l'utilisateur dans les réponses API
     private UserResponse toUserResponse(UserModel user) {
 
         return UserResponse.builder()
@@ -102,11 +116,14 @@ public class UserService {
 
     // Retrieves a user by their unique Id. If the user is not found, it throws a
     // UserNotFoundException
+    // Récupère un utilisateur par son identifiant unique. Si l'utilisateur n'est
+    // pas trouvé, il lance une UserNotFoundException
     public Optional<UserModel> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     // Searches users by their name, last name, or email
+    // Recherche des utilisateurs par leur nom, prénom ou email
     public List<UserResponse> searchUsers(String query) {
         return userRepository.searchUsers(query)
                 .stream()
@@ -116,6 +133,8 @@ public class UserService {
 
     // Retrieves a user by their unique Id. If the user is not found, it throws a
     // UserNotFoundException
+    // Récupère un utilisateur par son identifiant unique. Si l'utilisateur n'est
+    // pas trouvé, il lance une UserNotFoundException
     public List<UserResponse> getAllUsers() {
 
         return userRepository.findAll()
@@ -126,6 +145,8 @@ public class UserService {
 
     // Retrieves a user by their unique Id. If the user is not found, it throws a
     // UserNotFoundException
+    // Récupère un utilisateur par son identifiant unique. Si l'utilisateur n'est
+    // pas trouvé, il lance une UserNotFoundException
     public UserResponse getUserById(Long id) {
 
         UserModel user = userRepository.findById(id)
@@ -137,6 +158,8 @@ public class UserService {
 
     // Retrieves a user by their unique Id. If the user is not found, it throws a
     // UserNotFoundException
+    // Récupère un utilisateur par son identifiant unique. Si l'utilisateur n'est
+    // pas trouvé, il lance une UserNotFoundException
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
 
         UserModel actingUser = getCurrentActingUser();
@@ -185,6 +208,8 @@ public class UserService {
 
     // Deletes a user by their unique Id. If the user is not found, it throws a
     // UserNotFoundException
+    // Supprime un utilisateur par son identifiant unique. Si l'utilisateur n'est
+    // pas trouvé, il lance une UserNotFoundException
     public void deleteUserById(Long id) {
         UserModel actingUser = getCurrentActingUser();
         UserModel target = userRepository.findById(id)
@@ -199,6 +224,8 @@ public class UserService {
 
     // Changes a user's password. Encodes the new password and
     // disables the mustChangePassword flag
+    // Change le mot de passe d'un utilisateur. Encode le nouveau mot de passe et
+    // désactive le drapeau mustChangePassword
     public void changePassword(String email, String newPassword) {
         UserModel user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(

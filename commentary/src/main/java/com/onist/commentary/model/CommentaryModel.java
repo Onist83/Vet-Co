@@ -8,14 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter 
-@Setter 
-@NoArgsConstructor 
-@AllArgsConstructor 
-@Builder 
+// This class represents the data model for a commentary in the application
+// Cette classe représente le modèle de données pour un commentaire dans l'application
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CommentaryModel {
 
-    @Id 
+    @Id
     private String id;
 
     private Long animalId;
@@ -23,4 +25,3 @@ public class CommentaryModel {
     private String content;
     private String dateOfPublication;
 }
-

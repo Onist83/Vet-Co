@@ -8,7 +8,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-// CORS configuration: allows the Angular frontend (port 4300) to call the Gateway.
+// CORS configuration: allows the Angular frontend (port 4300) to call the Gateway
+// Configuration CORS : permet au frontend Angular (port 4300) d'appeler la passerelle Gateway
 @Configuration
 public class GatewayConfiguration {
 
@@ -25,5 +26,4 @@ public class GatewayConfiguration {
 
         return new CorsFilter(source);
     }
-
 }

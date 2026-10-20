@@ -17,6 +17,8 @@ import com.onist.animal.repository.OwnerRepository;
 
 import lombok.RequiredArgsConstructor;
 
+// Service class for managing animal-related operations, including creating, updating, deleting, and retrieving animals
+// Classe de service pour la gestion des opérations liées aux animaux, y compris la création, la mise à jour, la suppression et la récupération des animaux
 @Service
 @RequiredArgsConstructor
 public class AnimalService {
@@ -24,8 +26,10 @@ public class AnimalService {
     private final CommentaryFeign commentaryFeign;
     private final OwnerRepository ownerRepository;
 
-    // Recherche un Owner existant par prénom/nom (insensible à la casse), sinon le
-    // crée
+    // Finds an existing Owner by first and last name (case-insensitive), or creates
+    // a new one if not found
+    // Recherche un propriétaire existant par prénom et nom de famille (insensible à
+    // la casse), ou en crée un nouveau s'il n'est pas trouvé
     private OwnerModel findOrCreateOwner(String firstName, String lastName) {
         if (firstName == null || lastName == null) {
             return null;
@@ -38,6 +42,8 @@ public class AnimalService {
                                 .build()));
     }
 
+    // Converts an AnimalModel entity to an AnimalResponse DTO
+    // Convertit une entité AnimalModel en un DTO AnimalResponse
     private AnimalResponse toAnimalResponse(AnimalModel animal) {
 
         return AnimalResponse.builder()
@@ -58,6 +64,7 @@ public class AnimalService {
     }
 
     // Retrieves all animals in the system and maps them to AnimalResponse DTOs
+    // Récupère tous les animaux du système et les mappe en DTO AnimalResponse
     public List<AnimalResponse> getAllAnimals() {
 
         return animalRepository.findAll()
@@ -67,6 +74,8 @@ public class AnimalService {
     }
 
     // Searches animals by their name, or by the first/last name of either owner
+    // Recherche des animaux par leur nom, ou par le prénom/nom de l'un ou l'autre
+    // des propriétaires
     public List<AnimalResponse> searchByName(String query) {
         return animalRepository.searchByNameOrOwner(query)
                 .stream()
@@ -76,12 +85,16 @@ public class AnimalService {
 
     // Retrieves an animal by its unique id. Throws AnimalNotFoundException if not
     // found
+    // Récupère un animal par son identifiant unique. Lance AnimalNotFoundException
+    // si non trouvé
     public AnimalResponse animalById(Long id) {
         return toAnimalResponse(getAnimalOrThrow(id));
     }
 
     // Retrieves an animal by its unique id. Throws AnimalNotFoundException if not
     // found
+    // Récupère un animal par son identifiant unique. Lance AnimalNotFoundException
+    // si non trouvé
     private AnimalModel getAnimalOrThrow(Long id) {
         return animalRepository.findById(id)
                 .orElseThrow(() -> new AnimalNotFoundException("Animal not found with id " + id));
@@ -89,6 +102,8 @@ public class AnimalService {
 
     // Creates a new animal in the system after checking if the chipNumber already
     // exists. If the chipNumber is unique, saves the animal to the repository.
+    // Crée un nouvel animal dans le système après avoir vérifié si le chipNumber
+    // existe déjà. Si le chipNumber est unique, enregistre l'animal dans le dépôt.
     public AnimalResponse createAnimal(CreateAnimalRequest request) {
         if (request.getChipNumber() != null && animalRepository.existsByChipNumber(request.getChipNumber())) {
             throw new ChipNumberAlreadyExistsException("Microchip number already in use: " + request.getChipNumber());
@@ -117,6 +132,8 @@ public class AnimalService {
 
     // Retrieves a animal by their unique Id. If the animal is not found, it throws
     // a AnimalNotFoundException
+    // Récupère un animal par son identifiant unique. Si l'animal n'est pas trouvé,
+    // il lance une AnimalNotFoundException
     public AnimalResponse updateAnimal(Long id, UpdateAnimalRequest request) {
         AnimalModel existingAnimal = getAnimalOrThrow(id);
 
@@ -147,6 +164,8 @@ public class AnimalService {
 
     // Deletes a animal by their unique Id. If the animal is not found, it throws a
     // AnimalNotFoundException
+    // Supprime un animal par son identifiant unique. Si l'animal n'est pas trouvé,
+    // il lance une AnimalNotFoundException
     public void deleteAnimalById(Long id) {
         if (!animalRepository.existsById(id)) {
             throw new AnimalNotFoundException("Animal not found with id " + id);

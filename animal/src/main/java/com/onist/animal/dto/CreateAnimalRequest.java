@@ -2,44 +2,46 @@ package com.onist.animal.dto;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import com.onist.animal.model.Gender;
 import com.onist.animal.model.Species;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 // This class is used to represent the request for creating a new animal in the API
+// Cette classe sert à représenter la demande de création d'un nouvel animal dans l'API
 @Getter
 @Setter
 public class CreateAnimalRequest {
 
-    @NotBlank(message="Le prénom de l'animal doit être renseigné")
+    @NotBlank(message = "Le prénom de l'animal doit être renseigné")
     private String name;
 
-    @NotBlank(message="Le prénom du propriétaire doit être renseigné")
+    @NotBlank(message = "Le prénom du propriétaire doit être renseigné")
     private String firstNameOfOwner;
 
-    @NotBlank(message="Le nom du propriétaire doit être renseigné")
+    @NotBlank(message = "Le nom du propriétaire doit être renseigné")
     private String lastNameOfOwner;
 
     @NotNull(message = "La date de naissance doit être renseignée")
     private LocalDate birthdate;
 
-    @NotNull(message="La classification de l'animal doit être renseigné")
+    @NotNull(message = "La classification de l'animal doit être renseigné")
     private Species species;
 
     @NotBlank(message = "L'espèce précise de l'animal doit être renseignée")
     private String animalFamily;
 
-    @NotNull(message="Le genre de l'animal doit être renseigné")
+    @NotNull(message = "Le genre de l'animal doit être renseigné")
     private Gender gender;
 
     private String firstNameOfSecondOwner;
 
     private String lastNameOfSecondOwner;
-    
+
     private String breed;
 
     private Double weight;
